@@ -1,0 +1,47 @@
+function textToImg(text, fontsize, fontcolor) {
+      console.log("text", text);
+      if (!fontsize) {
+        fontsize = 22;
+      }
+      if (!fontcolor) {
+        fontcolor = "gray";
+      }
+      var canvas = document.createElement('canvas');
+      var $buHeight = 0;
+      if (fontsize <= 32) { $buHeight = 99; }
+      else if (fontsize > 32 && fontsize <= 60) { $buHeight = 2; }
+      else if (fontsize > 60 && fontsize <= 80) { $buHeight = 4; }
+      else if (fontsize > 80 && fontsize <= 100) { $buHeight = 6; }
+      else if (fontsize > 100) { $buHeight = 10; }
+      canvas.height = fontsize + $buHeight;
+      canvas.padding = 30;
+      var context = canvas.getContext('2d');
+
+      context.clearRect(0, 0, canvas.width * 2, canvas.height);
+
+      var canvasWidth = canvas.width / 99;
+      canvas.width = 450;
+      canvas.height = 190;
+      context.fillStyle = fontcolor;
+      context.font = fontsize + "px Arial";
+      context.textBaseline = 'middle';
+      var angle = -40;
+      var angleInRadians = (angle * Math.PI / 180);
+      var x = -150;
+      var y = 150;
+      var x1 = Math.cos(angle) * x - Math.sin(angle) * y;
+      var y1 = Math.cos(angle) * y + Math.sin(angle) * x;
+      //旋转-40度
+      context.rotate(angleInRadians);
+//支持多行
+      var arrayText = text.split("</br>");
+      for (var i = 0; i < arrayText.length; i++) {
+        canvasWidth = context.measureText(arrayText[i]).width + 200;
+        context.fillText(arrayText[i], y1, x1,canvasWidth);
+        y1 -= 20;
+        x1 += 20
+      }
+
+      var dataUrl = canvas.toDataURL('image/png');
+      return dataUrl;
+    }
